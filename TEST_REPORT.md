@@ -155,3 +155,5 @@ Smoke tests now assert the unlock function, its user-interaction entry points, a
 - Smoke tests check the live-statistics update path and phone-detection threshold/status behavior.
 - Automated tests cannot prove real phone recognition. Verify on the actual phone with camera permission, good lighting, a phone visible in-frame, and internet access for first-time model loading.
 - Statistics are stored in this browser's localStorage and are not synchronized across devices. Existing sessions are not erased by this update.
+
+- Follow-up correctness guard: clear the active-session accumulator before refreshing completed-session totals, preventing the newly saved session from being counted twice in Today focused and goal progress. Reset and preset changes also immediately refresh the live dashboard values.
