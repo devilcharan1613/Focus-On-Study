@@ -60,3 +60,13 @@ These checks require a real browser, camera, and device and are not represented 
 - `tests/smoke.cjs` (new)
 - `.github/workflows/validate.yml`
 
+
+
+## Original Focus Desk alert audio integration
+
+The three MP3 files from the reference repository were added under `assets/` and connected to the matching alerts:
+- `alarm.mp3`: eyes-closed alert and focus timer completion.
+- `faudio.mp3`: face out of view.
+- `paudio.mp3`: phone detected.
+
+The audio is loaded on demand by the browser (`preload="none"`) and is included in the service-worker app-shell cache. Browser audio autoplay restrictions still apply: alerts can play after the user has interacted with the page. The audio files retain any third-party rights and attribution requirements that apply to them; the source repository's README distinguishes the MIT-licensed code from audio/model assets.
