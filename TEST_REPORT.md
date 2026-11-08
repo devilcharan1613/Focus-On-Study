@@ -111,3 +111,11 @@ The automatic camera-monitor alert path only called `playAlert()` after `audioUn
 ### Validation
 
 Smoke tests now assert the unlock function, its user-interaction entry points, and the automatic MP3 alert call. Browser autoplay restrictions vary by device, so final audible playback still needs a real-device check after deployment. The app must be opened, and the user should tap **Start focus** or **Enable camera** once before monitoring alerts are expected to play.
+
+
+## Larger camera preview (8 November 2026)
+
+- Increased the attention-monitor camera preview to a 460–680px responsive height on desktop and a 480–680px responsive height on mobile.
+- Kept the video and detection overlay responsive within the enlarged preview; the preview continues to use `object-fit: contain` so the camera image is not cropped.
+- Added smoke-test assertions for both responsive camera sizing rules.
+- Automated source-level checks can verify the CSS rules, but actual camera rendering and permission behavior still require testing on a physical phone/browser.
