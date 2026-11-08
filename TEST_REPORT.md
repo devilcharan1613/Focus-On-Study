@@ -6,7 +6,7 @@
 
 ## Result
 
-The application source passes the repository's automated validation and browser-runtime smoke test. The changes below are committed to `main`. GitHub Pages deployment is a separate workflow from application validation; its latest deployment run should be checked in the Actions tab before treating the public URL as live.
+The latest review found and fixed a CI test-harness defect: the mocked audio elements did not implement the browser `pause()` method used by the new sound-test handler. The application code itself passed JavaScript syntax checks, but the smoke test failed until this mock was corrected. Re-run CI on the new commit before treating validation as green. Real-device checks remain outstanding.
 
 ## Fixes applied
 
@@ -32,7 +32,7 @@ The application source passes the repository's automated validation and browser-
 | Web app manifest JSON and relative paths | PASS |
 | Service-worker navigation fallback checks | PASS |
 
-The GitHub Actions validation run for commit `ac4466bc5d4c2184f3817a5ecac06dd67c8f9ada` completed successfully.
+The previous validation run on commit `9103239d1288391c4fa8f0761e4462681c6418b0` failed at the audio smoke-test step with `TypeError: a.pause is not a function`. The mock `El` class now implements `pause()`, `play()`, and the basic media state used by the handler. The next Actions run is the source of truth for whether this correction passes.
 
 ## Remaining manual/device tests
 
@@ -76,7 +76,7 @@ The audio is loaded on demand by the browser (`preload="none"`) and is included 
 
 The prior playback handler silently switched to a short oscillator beep when the MP3 play promise rejected. That fallback made audio-load, autoplay, or path errors sound like a successful but incorrect beep. It has been removed. Alert events now request their corresponding source MP3 at full HTML media volume (1.0), and failed playback is logged and reported in the on-page status text instead of synthesizing a beep.
 
-The monitor does not attempt browser-blocked audio until a user has pressed **Test original sounds**, which plays the three assets in sequence from a direct user gesture. Audio elements are preloaded, use explicit relative paths, and are stopped when the camera monitor is stopped. Timer completion is mapped to the phone-alert MP3 only as a completion cue in this implementation; the eye, face, and phone monitor alerts retain their respective mapping.
+The monitor attempts alert audio after the user has interacted with the page. The three individual sound-test buttons provide direct user-gesture playback for troubleshooting. Audio elements are preloaded, use explicit relative paths, and are stopped when the camera monitor is stopped. Timer completion uses the eye/alarm MP3 as a completion cue; the eye, face, and phone monitor alerts retain their respective mapping.
 
 
 ## Responsive camera, full-length audio, and phone detection update
@@ -88,3 +88,8 @@ The monitor does not attempt browser-blocked audio until a user has pressed **Te
 - Updated service-worker cache to v5 and expanded smoke tests for the new audio controls and camera settings.
 
 Automated checks do not prove actual speaker output or real-world phone recognition. Those require testing on the target Android device with site sound permission, media volume enabled, camera permission granted, and adequate lighting.
+
+
+## Latest CI defect correction (8 November 2026)
+
+The smoke test invoked the eye-alert test button but its fake DOM element lacked the `pause()` method that real HTML audio elements provide. This caused the automated test to fail before subsequent validation steps could run. The test double now models `pause()`, `play()`, `currentTime`, `volume`, `muted`, `paused`, and `ended`. This is a test-harness correction, not a change to production audio playback. Confirm the new GitHub Actions run before marking the fix as verified.
