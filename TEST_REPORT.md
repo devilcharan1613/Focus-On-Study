@@ -70,3 +70,10 @@ The three MP3 files from the reference repository were added under `assets/` and
 - `paudio.mp3`: phone detected.
 
 The audio is loaded on demand by the browser (`preload="none"`) and is included in the service-worker app-shell cache. Browser audio autoplay restrictions still apply: alerts can play after the user has interacted with the page. The audio files retain any third-party rights and attribution requirements that apply to them; the source repository's README distinguishes the MIT-licensed code from audio/model assets.
+
+
+## MP3 playback reliability fix
+
+The prior playback handler silently switched to a short oscillator beep when the MP3 play promise rejected. That fallback made audio-load, autoplay, or path errors sound like a successful but incorrect beep. It has been removed. Alert events now request their corresponding source MP3 at full HTML media volume (1.0), and failed playback is logged and reported in the on-page status text instead of synthesizing a beep.
+
+The monitor does not attempt browser-blocked audio until a user has pressed **Test original sounds**, which plays the three assets in sequence from a direct user gesture. Audio elements are preloaded, use explicit relative paths, and are stopped when the camera monitor is stopped. Timer completion is mapped to the phone-alert MP3 only as a completion cue in this implementation; the eye, face, and phone monitor alerts retain their respective mapping.
