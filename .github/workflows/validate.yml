@@ -14,7 +14,12 @@ jobs:
         with:
           node-version: 22
       - name: Check JavaScript syntax
-        run: node --check app.js
+        run: |
+          node --check app.js
+          node --check sw.js
+          node --check tests/smoke.cjs
+      - name: Run application smoke tests
+        run: node tests/smoke.cjs
       - name: Check required files
         run: |
           test -s index.html
@@ -22,10 +27,11 @@ jobs:
           test -s app.js
           test -s manifest.webmanifest
           test -s sw.js
-      - name: Validate manifest
-        run: node -e "JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8'))"
-      - name: Check app references
+          test -s icon.svg
+          test -s tests/smoke.cjs
+      - name: Validate manifest and app references
         run: |
+          node -e "JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8'))"
           grep -q 'app.js' index.html
           grep -q 'styles.css' index.html
           grep -q 'manifest.webmanifest' index.html
