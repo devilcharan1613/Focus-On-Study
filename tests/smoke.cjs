@@ -5,10 +5,11 @@ const vm=require('node:vm');
 const html=fs.readFileSync('index.html','utf8');
 const app=fs.readFileSync('app.js','utf8');
 const sw=fs.readFileSync('sw.js','utf8');
+const css=fs.readFileSync('styles.css','utf8');
 const manifest=JSON.parse(fs.readFileSync('manifest.webmanifest','utf8'));
 assert.match(html,/<meta name="viewport"/);
 for(const id of ['today','focused','sessions','percent','streak','clock','start','reset','task','enable','stop','history','goalInput','customInput' ,'playEye','playFace','playPhone','alarmSound','faceSound','phoneSound']) assert.match(html,new RegExp('id="'+id+'"'), 'missing DOM element '+id);
-assert.match(html,/styles\.css/); assert.match(html,/app\.js/);
+assert.match(html,/styles\.css/); assert.match(html,/app\.js/); assert.match(css,/\.camera\{height:clamp\(460px,55vw,680px\);min-height:460px/); assert.match(css,/\.camera\{height:clamp\(480px,125vw,680px\);min-height:480px/);
 assert.equal(manifest.start_url,'./'); assert.equal(manifest.scope,'./');
 assert.match(sw,/focus-study-shell-v5/); assert.match(sw,/request\.mode==='navigate'/); for(const asset of ['./assets/alarm.mp3','./assets/faudio.mp3','./assets/paudio.mp3']) assert.ok(sw.includes(asset),'missing cached sound '+asset); for(const id of ['alarmSound','faceSound','phoneSound']) assert.match(html,new RegExp('id="'+id+'"[^>]*preload="auto"')); assert.match(app,/function unlockAudio\(\)/); assert.match(app,/function playAlert\(type\)/); assert.match(app,/function pauseStart\(\)\{unlockAudio\(\)/); assert.match(app,/async function enable\(\)\{unlockAudio\(\)/); assert.match(app,/playAlert\(alertType\|\|'eye'\)\.catch/); assert.doesNotMatch(app,/if\(audioUnlocked\)playAlert/); assert.match(app,/function testSound\(id,label\)/); assert.match(app,/video:\{facingMode:'user',width:\{ideal:1280\}/); assert.doesNotMatch(app,/function sound\(\)/);
 class El { constructor(id=''){this.id=id;this.textContent='';this.innerHTML='';this.value='';this.disabled=false;this.hidden=false;this.style={};this.dataset={};this.className='';this.paused=true;this.ended=false;this.currentTime=0;this.volume=1;this.muted=false;this.classList={add(){},remove(){},toggle(){},contains(){return false}};} getContext(){return {clearRect(){},strokeRect(){},fillText(){}}} showModal(){this.open=true} close(){this.open=false} pause(){this.paused=true} play(){this.paused=false;return Promise.resolve()} }
