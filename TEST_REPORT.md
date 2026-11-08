@@ -135,3 +135,23 @@ Smoke tests now assert the unlock function, its user-interaction entry points, a
 ### Statistics review
 - Today focused, sessions done, daily-goal progress, streak, and recent history are calculated from completed sessions saved in localStorage.
 - Sessions shorter than 60 seconds are intentionally not added to study history. Timer completion and statistics persistence still need a real browser test; the automated test suite does not simulate a full 5–180 minute session or Android background suspension.
+
+
+## Phone detection and live study statistics update (8 November 2026)
+
+### Phone check improvements
+- Lowered the COCO-SSD phone confidence threshold to 0.22 and requests up to 20 candidate boxes, then selects the strongest `cell phone` detection.
+- Draws a confidence percentage beside a detected phone so users can tell what the model recognized.
+- Shows **Good** when the model completes a frame check and finds no phone, instead of leaving the indicator stuck on **Checking** before the first phone has ever been seen.
+- Reports **Unavailable** if phone inference throws an error. Detection remains approximate and can miss phones or produce false positives depending on camera angle, lighting, distance, and device speed.
+
+### Study statistics improvements
+- Today focused, daily-goal completion, progress bar, and remaining time now update during active focus sessions.
+- Paused time remains included in the current session's accumulated focus time; the display stops advancing while paused.
+- Sessions done and Recent Activity continue to represent completed sessions saved locally. A session is added to history when the timer completes and only if it lasted at least 60 seconds.
+- Bumped the service-worker cache to v6 so deployed browsers request the updated app shell.
+
+### Validation scope
+- Smoke tests check the live-statistics update path and phone-detection threshold/status behavior.
+- Automated tests cannot prove real phone recognition. Verify on the actual phone with camera permission, good lighting, a phone visible in-frame, and internet access for first-time model loading.
+- Statistics are stored in this browser's localStorage and are not synchronized across devices. Existing sessions are not erased by this update.
