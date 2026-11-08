@@ -24,6 +24,6 @@ get('start').onclick(); assert.match(get('start').textContent,/Pause/);
 get('start').onclick(); assert.match(get('start').textContent,/Resume/);
 get('reset').onclick(); assert.match(get('clock').textContent,/^25:00$/);
 get('custom').onclick(); assert.equal(get('customDialog').open,true);
-get('testSounds').onclick(); get('editGoal').onclick(); get('goalInput').value='5'; get('saveGoal').onclick({preventDefault(){}}); assert.match(get('goalCaption').textContent,/5 hours/);
+get('playEye').onclick(); get('editGoal').onclick(); get('goalInput').value='5'; get('saveGoal').onclick({preventDefault(){}}); assert.match(get('goalCaption').textContent,/5 hours/);
 assert.doesNotMatch(get('history').innerHTML,/<script/i);
 console.log('PASS: HTML references, manifest, service worker fallback, app boot, timer pause/resume/reset, dialogs and goal update');
