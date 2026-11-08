@@ -93,3 +93,21 @@ Automated checks do not prove actual speaker output or real-world phone recognit
 ## Latest CI defect correction (8 November 2026)
 
 The smoke test invoked the eye-alert test button but its fake DOM element lacked the `pause()` method that real HTML audio elements provide. This caused the automated test to fail before subsequent validation steps could run. The test double now models `pause()`, `play()`, `currentTime`, `volume`, `muted`, `paused`, and `ended`. This is a test-harness correction, not a change to production audio playback. Confirm the new GitHub Actions run before marking the fix as verified.
+
+
+## MP3 alert playback fix (8 November 2026)
+
+### Root cause
+
+The automatic camera-monitor alert path only called `playAlert()` after `audioUnlocked` had already become true. That flag was set by manually tapping one of the sound-test buttons, so automatic alerts could remain silent even though the MP3 files were present and cached. The previous implementation also depended on browser autoplay policy, which blocks audio started outside a user gesture on some browsers.
+
+### Fix
+
+- Added an audio-unlock attempt during the user's **Start focus** and **Enable camera** button interactions.
+- The unlock routine primes the three bundled MP3 elements while muted, then pauses and rewinds them.
+- Camera detection now attempts the correct MP3 alert directly instead of silently skipping playback while waiting for the test buttons to be used.
+- No generated oscillator/beep fallback is used. If the browser blocks playback, the matching **Play** test button remains available and the browser console reports the failure.
+
+### Validation
+
+Smoke tests now assert the unlock function, its user-interaction entry points, and the automatic MP3 alert call. Browser autoplay restrictions vary by device, so final audible playback still needs a real-device check after deployment. The app must be opened, and the user should tap **Start focus** or **Enable camera** once before monitoring alerts are expected to play.
