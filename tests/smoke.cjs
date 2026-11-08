@@ -23,7 +23,7 @@ vm.runInNewContext(app,sandbox,{timeout:3000});
 assert.match(get('clock').textContent,/^25:00$/);
 get('start').onclick(); assert.match(get('start').textContent,/Pause/);
 get('start').onclick(); assert.match(get('start').textContent,/Resume/);
-get('reset').onclick(); assert.match(get('clock').textContent,/^25:00$/);
+get('reset').onclick(); assert.match(get('clock').textContent,/^25:00$/); get('start').onclick(); get('start').onclick(); presets[1].onclick(); assert.match(get('clock').textContent,/^45:00$/); assert.equal(get('start').textContent,'▶ Start focus'); assert.equal(get('timerState').textContent,'● Ready');
 get('custom').onclick(); assert.equal(get('customDialog').open,true);
 get('playEye').onclick(); get('editGoal').onclick(); get('goalInput').value='5'; get('saveGoal').onclick({preventDefault(){}}); assert.match(get('goalCaption').textContent,/5 hours/);
 assert.doesNotMatch(get('history').innerHTML,/<script/i);
