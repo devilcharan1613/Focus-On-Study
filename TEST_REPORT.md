@@ -77,3 +77,14 @@ The audio is loaded on demand by the browser (`preload="none"`) and is included 
 The prior playback handler silently switched to a short oscillator beep when the MP3 play promise rejected. That fallback made audio-load, autoplay, or path errors sound like a successful but incorrect beep. It has been removed. Alert events now request their corresponding source MP3 at full HTML media volume (1.0), and failed playback is logged and reported in the on-page status text instead of synthesizing a beep.
 
 The monitor does not attempt browser-blocked audio until a user has pressed **Test original sounds**, which plays the three assets in sequence from a direct user gesture. Audio elements are preloaded, use explicit relative paths, and are stopped when the camera monitor is stopped. Timer completion is mapped to the phone-alert MP3 only as a completion cue in this implementation; the eye, face, and phone monitor alerts retain their respective mapping.
+
+
+## Responsive camera, full-length audio, and phone detection update
+
+- Enlarged the camera preview responsively using a viewport-based height with a 320 px minimum on desktop and 340 px minimum on mobile; video and detection overlay share a contained viewport.
+- Replaced the chained audio test with three separate user-initiated controls. Each button starts its complete corresponding MP3 at media volume 100%, and reports load/play errors on screen. Active alert playback is no longer restarted every six seconds, preventing long alert clips from being cut off.
+- Timer completion now uses the eye/alarm sound. The face-out-of-view and phone-detected alerts keep their respective MP3s.
+- Camera requests a higher ideal capture resolution and waits for video metadata before starting inference. Phone detection threshold is lowered from 0.45 to 0.30 to improve recall; this may increase false positives. Phone detection remains limited by COCO-SSD accuracy, camera angle, lighting, and device performance.
+- Updated service-worker cache to v5 and expanded smoke tests for the new audio controls and camera settings.
+
+Automated checks do not prove actual speaker output or real-world phone recognition. Those require testing on the target Android device with site sound permission, media volume enabled, camera permission granted, and adequate lighting.

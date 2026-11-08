@@ -7,10 +7,10 @@ const app=fs.readFileSync('app.js','utf8');
 const sw=fs.readFileSync('sw.js','utf8');
 const manifest=JSON.parse(fs.readFileSync('manifest.webmanifest','utf8'));
 assert.match(html,/<meta name="viewport"/);
-for(const id of ['today','focused','sessions','percent','streak','clock','start','reset','task','enable','stop','history','goalInput','customInput','testSounds','alarmSound','faceSound','phoneSound']) assert.match(html,new RegExp('id="'+id+'"'), 'missing DOM element '+id);
+for(const id of ['today','focused','sessions','percent','streak','clock','start','reset','task','enable','stop','history','goalInput','customInput' ,'playEye','playFace','playPhone','alarmSound','faceSound','phoneSound']) assert.match(html,new RegExp('id="'+id+'"'), 'missing DOM element '+id);
 assert.match(html,/styles\.css/); assert.match(html,/app\.js/);
 assert.equal(manifest.start_url,'./'); assert.equal(manifest.scope,'./');
-assert.match(sw,/focus-study-shell-v4/); assert.match(sw,/request\.mode==='navigate'/); for(const asset of ['./assets/alarm.mp3','./assets/faudio.mp3','./assets/paudio.mp3']) assert.ok(sw.includes(asset),'missing cached sound '+asset); for(const id of ['alarmSound','faceSound','phoneSound']) assert.match(html,new RegExp('id="'+id+'"[^>]*preload="auto"')); assert.match(app,/function playAlert\(type\)/); assert.doesNotMatch(app,/function sound\(\)/);
+assert.match(sw,/focus-study-shell-v5/); assert.match(sw,/request\.mode==='navigate'/); for(const asset of ['./assets/alarm.mp3','./assets/faudio.mp3','./assets/paudio.mp3']) assert.ok(sw.includes(asset),'missing cached sound '+asset); for(const id of ['alarmSound','faceSound','phoneSound']) assert.match(html,new RegExp('id="'+id+'"[^>]*preload="auto"')); assert.match(app,/function playAlert\(type\)/); assert.match(app,/function testSound\(id,label\)/); assert.match(app,/video:\{facingMode:'user',width:\{ideal:1280\}/); assert.doesNotMatch(app,/function sound\(\)/);
 class El { constructor(id=''){this.id=id;this.textContent='';this.innerHTML='';this.value='';this.disabled=false;this.hidden=false;this.style={};this.dataset={};this.className='';this.classList={add(){},remove(){},toggle(){},contains(){return false}};} getContext(){return {clearRect(){},strokeRect(){},fillText(){}}} showModal(){this.open=true} close(){this.open=false} play(){return Promise.resolve()} }
 const els=new Map(); const get=id=>{if(!els.has(id))els.set(id,new El(id));return els.get(id)};
 const presets=[25,45,60].map(n=>{const e=new El();e.dataset.min=String(n);return e});
