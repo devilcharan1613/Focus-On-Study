@@ -119,3 +119,19 @@ Smoke tests now assert the unlock function, its user-interaction entry points, a
 - Kept the video and detection overlay responsive within the enlarged preview; the preview continues to use `object-fit: contain` so the camera image is not cropped.
 - Added smoke-test assertions for both responsive camera sizing rules.
 - Automated source-level checks can verify the CSS rules, but actual camera rendering and permission behavior still require testing on a physical phone/browser.
+
+
+## Timer and study-statistics correction (8 November 2026)
+
+### Bug fixed
+- Changing a timer preset or custom duration after pausing previously changed the countdown duration but retained the old elapsed-time accumulator. This could make the next session finish early.
+- Selecting a new duration while paused could also leave the controls showing **Resume** and **Paused**, even though a fresh duration had been loaded.
+
+### Fix
+- Selecting a new preset/custom duration now clears the previous elapsed-time accumulator and returns the timer controls and status to **Start focus / Ready**.
+- The timer remains protected from changing presets while actively running.
+- Added a regression check that pauses a session, selects 45 minutes, and verifies the full 45:00 duration and Ready state.
+
+### Statistics review
+- Today focused, sessions done, daily-goal progress, streak, and recent history are calculated from completed sessions saved in localStorage.
+- Sessions shorter than 60 seconds are intentionally not added to study history. Timer completion and statistics persistence still need a real browser test; the automated test suite does not simulate a full 5–180 minute session or Android background suspension.
