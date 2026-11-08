@@ -1,0 +1,31 @@
+name: Validate Focus On Study
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check JavaScript syntax
+        run: node --check app.js
+      - name: Check required files
+        run: |
+          test -s index.html
+          test -s styles.css
+          test -s app.js
+          test -s manifest.webmanifest
+          test -s sw.js
+      - name: Validate manifest
+        run: node -e "JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8'))"
+      - name: Check app references
+        run: |
+          grep -q 'app.js' index.html
+          grep -q 'styles.css' index.html
+          grep -q 'manifest.webmanifest' index.html
